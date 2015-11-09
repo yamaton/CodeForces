@@ -58,7 +58,8 @@ docs/_build/
 # PyBuilder
 target/
 
-
+# input files
+*.in
 
 
 # ---------------- Haskell -------------------
