@@ -19,6 +19,9 @@ def solve(xs):
     pass
 
 
+def p(*args, **kwargs):
+    return print(*args, file=sys.stderr, **kwargs)
+
 def main():
     m = int(input())
     [n, k, a] = [int(i) for i in input().strip().split()]
