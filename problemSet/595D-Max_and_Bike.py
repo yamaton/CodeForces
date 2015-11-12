@@ -1,50 +1,50 @@
 """
 Codeforces Round #330 (Div. 2)
 
-Problem 595 D. Max and Bike
+Problem 594 B / 595 D. Max and Bike
 
 @author yamaton
 @date 2015-11-08
 """
 
 import math
+import random
 import sys
 
+import functools
 
 
-sys.setrecursionlimit(10000000)
-
-
+@functools.lru_cache(None)
 def solve_for_t(r, v, l):
-    xp = l % (2 * math.pi * r)
-
+    pm = 1 if (l / 2) % (2 * math.pi * r) < math.pi * r else -1
     def f(t):
-        return v * t + 2 * r * math.sin(v * t / (2 * r)) - xp
+        # return v * t + 2 * pm * r * math.sin(half_omega * t) - l
+        return v * t + 2 * pm * r * math.sin(v * t / (2 * r)) - l
 
     def dfdt(t):
-        return v * (1 + math.cos(v * t))
+        # return v * (1 + pm * math.cos(half_omega * t))
+        return v * (1 + pm * math.cos(v * t / (2 * r)))
 
     def newton(t):
         return t - f(t) / dfdt(t)
 
 
-    t0 = (l - xp) / v
-    prev = 1.0
+    # p('\n----------------')
+    estimate = l / v
+    prev = estimate
     t = newton(prev)
-    while abs(t - prev) > 0.000001 or abs(t - prev) / max(1, abs(t)) > 0.000001:
-        print(' .... t =', t, file=sys.stderr)
+    while abs(t - prev) > 0.0000001 or abs(t - prev) / max(1, abs(t)) > 0.0000001:
+        if t < - estimate or t > 10 * estimate:
+            t = random.random() * 2 * estimate
+        # p('... t =', t)
         prev, t = t, newton(t)
 
-    print('t0 =', t0, file=sys.stderr)
-    print('t =', t, file=sys.stderr)
-    print('prev =', prev, file=sys.stderr)
+    # p('prev =', prev)
+    # p('left(t) =', v * t + 2 * r * math.sin(v * t / (2 * r)))
+    # p('l =', l)
+    # p('f(t) =', f(t))
 
-    print('left(t1) =', v * t + 2 * r * math.sin(v * t / (2 * r)), file=sys.stderr)
-    print('f(t1) =', f(t), file=sys.stderr)
-    print('xp =', xp, file=sys.stderr)
-    print('result =', t + t0)
-
-    return t0 + t
+    return t
 
 
 def solve(pairs, r, v):
@@ -52,12 +52,16 @@ def solve(pairs, r, v):
     return [solve_for_t(r, v, d) for d in distances]
 
 
+def p(*args, **kwargs):
+    return print(file=sys.stderr, *args, **kwargs)
+
+
 def main():
     [n, r, v] = [int(i) for i in input().strip().split()]
     pairs = [[int(i) for i in input().strip().split()] for _ in range(n)]
     results = solve(pairs, r, v)
     for res in results:
-        print(res)
+        print("%.12f" % res)
 
 
 if __name__ == '__main__':
