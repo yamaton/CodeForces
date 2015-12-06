@@ -1,5 +1,5 @@
 {-
-A. Arrival of the General
+144 A. Arrival of the General
 ==========================
 time limit per test: 2 seconds
 memory limit per test: 256 megabytes

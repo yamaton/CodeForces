@@ -5,8 +5,9 @@ CodeForces Sample Test
 @author yamaton
 @date 2015-08-31
       2015-09-27
+      2015-11-20  Test C++, Haskell, and Scala in addition to Python
 """
-from extract_samples import extract_samples, is_proper
+from scrape_codeforces import extract_samples, is_proper
 import subprocess
 import sys
 import os
@@ -57,12 +58,18 @@ def extract_id(filename):
     >>> extract_id('123_baz.py')
     None
 
+    >>> extract_id('CF123K_baz.py')
+    '123K'
+
     If filename contains directories like '/foo/bar/32A-abc.py',
     basename ('32A-abc.py') is taken first.
     """
     base = os.path.basename(filename)
-    candidate = re.split("[-_\.\s]", base)[0]
-    return candidate if is_proper(candidate) else None
+    if base[:2] == 'CF':
+        base = base[2:]
+    candidate = next((s for s in re.split("[-_\.\s]", base) if is_proper(s)), None)
+    
+    return candidate
 
 
 def id_and_filename_from_argv():
@@ -89,42 +96,59 @@ def id_and_filename_from_argv():
     return (problem_id, filename)
 
 
-def run_python(filename, inp):
+def run_code(filename, inp):
     """
-    Run Python code against given inp
+    Run Python/Scala/Haskell code against given inp
 
     Args:
         filename  (str): filename of python code
         inp       [str]: list of sample input
     """
-    p = subprocess.Popen([sys.executable, filename],
+    basename = os.path.basename(filename)
+    base, ext = os.path.splitext(basename)
+
+    if ext == '.py':
+        com = [sys.executable, filename]
+    elif ext in ('.cc', '.cp', '.cpp', '.c++', '.cxx'):
+        subprocess.run(['clang++', '-std=c++11', filename, '-o', base + '.out'])
+        com = ['./' + base + '.out']
+    elif ext == '.scala':
+        subprocess.run(['scalac', filename])
+        com = ['scala', base]
+    elif ext == '.hs':
+        subprocess.run(['ghc', '-O2', '-Wall', filename, '-o', base + '.out'])
+        com = ['./' + base + '.out']
+    else:
+        sys.exit('I can take only .py, .cpp, .scala, .hs')
+
+    p = subprocess.Popen(com,
                          stdin=subprocess.PIPE,
-                         stdout=subprocess.PIPE)
+                         stdout=subprocess.PIPE)        
     out, _ = p.communicate(inp.encode())    # encode: string -> bytestring
     out = out.decode().strip()              # decode: bytestring -> string
     return out
 
 
-def compare(inputs, outputs, expected):
+def compare(inputs, outputs, answer):
     """
     inputs   [str]
     outputs  [str]
-    expected [str]
+    answer [str]
     """
 
-    assert len(inputs) == len(outputs) == len(expected)
+    assert len(inputs) == len(outputs) == len(answer)
 
-    for i, (inp, out, exp) in enumerate(zip(inputs, outputs, expected)):
+    for i, (inp, out, ans) in enumerate(zip(inputs, outputs, answer)):
         print('Case {}: '.format(i+1), end='')
         out = out.strip()
-        exp = exp.strip()
-        if exp == out:
+        ans = ans.strip()
+        if ans == out:
             print(green('ok'))
         else:
             print(red('==================Incorrect!=================='))
-            print('input:', inp)
-            print('output:  ', out)
-            print('expected:', exp)
+            print('Input: ', inp)
+            print('Output: ', out)
+            print('Answer: ', ans)
 
 
 def main():
@@ -144,9 +168,9 @@ def main():
     assert problem_id == json_dict['id']
 
     inputs = ['\n'.join(d['input']) for d in json_dict['sample_io']]
-    expected = ['\n'.join(d['output']) for d in json_dict['sample_io']]
-    outputs = [run_python(filename, inp) for inp in inputs]
-    compare(inputs, outputs, expected)
+    answer = ['\n'.join(d['output']) for d in json_dict['sample_io']]
+    outputs = [run_code(filename, inp) for inp in inputs]
+    compare(inputs, outputs, answer)
 
 
 if __name__ == '__main__':

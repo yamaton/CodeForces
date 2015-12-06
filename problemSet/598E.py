@@ -1,10 +1,10 @@
 """
-Codeforces Round #325 (Div. 2)
+Codeforces Educational Round
 
-Problem 586 A
+Problem 598 C
 
 @author yamaton
-@date 2015-11-09
+@date 2015-11-12
 """
 
 import itertools as it
@@ -23,12 +23,12 @@ def p(*args, **kwargs):
     return print(*args, file=sys.stderr, **kwargs)
 
 def main():
-    m = int(input())
-    [n, k, a] = [int(i) for i in input().strip().split()]
-    xs = [int(i) for i in input().strip().split()]
-    assert len(xs) == m
+    n = int(input())
+    [a, b, k] = [int(c) for c in input().strip().split()]
+    mat = [[int(c) for c in input().strip().split()] for _ in range(n)]
+    assert len(xs) == n
 
-    result = solve(xs, n, k, a)
+    result = solve(xs)
     print(result)
 
 

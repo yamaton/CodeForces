@@ -21,7 +21,7 @@ def solve_bruteforce(xs):
                for (i, j) in itertools.combinations(n, 2))
 
 
-def solve_(xs):
+def solve_slow(xs):
     "O(N^2) solution"
     n = len(xs)
     assert n > 0
@@ -36,7 +36,7 @@ def solve_(xs):
         return sum(xs) + deltaS
 
 
-def solve(xs):
+def solve_old(xs):
     "O(N) with DP"
     a = [1 if x == 0 else -1 for x in xs]
     b = itertools.accumulate(a)
@@ -46,6 +46,25 @@ def solve(xs):
         deltaS = max(deltaS, bk - min_so_far)
         min_so_far = min(min_so_far, bk)
 
+    if deltaS == 0:
+        return sum(xs) - 1
+    else:
+        return sum(xs) + deltaS
+
+
+
+def solve(xs):
+    """ Maximum value contiguous subsequence problem """
+    n = len(xs)
+    a = [1 if x == 0 else -1 for x in xs]
+
+    m = collections.defaultdict(int)
+    maxval = 0
+    for i in range(n):
+        m[i] = max(m[i-1] + a[i], a[i])
+        maxval = max(m[i], maxval)
+
+    deltaS = maxval
     if deltaS == 0:
         return sum(xs) - 1
     else:

@@ -10,6 +10,8 @@ Problem 595 B. Pasha and Phone
 BASE = 1000000007
 
 def count(k, a, b):
+    # automatically takes care of the case a=0
+    # (due to truncation toward negative infinity)
     x = count_multiples(a, 0, 10**k - 1)
     y = count_multiples(a, b * 10**(k-1), (b + 1) * 10**(k-1) - 1)
     return  x - y

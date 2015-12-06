@@ -1,5 +1,5 @@
 {-
-A. Tram
+116A. Tram
 =========
 time limit per test: 2 seconds
 memory limit per test: 256 megabytes
@@ -59,7 +59,7 @@ reader :: String -> [[Int]]
 reader s = [map read $ words line | line <- xs]
   where _:xs = lines s
 
-main = do 
+main = do
   input <- getContents
   let xss = reader input
   print $ tramCapacity xss

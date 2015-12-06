@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Extract input and output samples from a CodeForces **Contest** problem, then pass the information in JSON
+Web-scrape input and output samples from a CodeForces problem, then returns the information in JSON
 
 @author yamaton
 @date 2015-08-31
@@ -65,10 +65,11 @@ def geturl(prob_id, url=CODEFORCES_PROBLEM_URL):
     Returns CodeForces URL for given problem ID.
 
     Args:
-        prob_id_str (str)
+        prob_id (str)
+        url (str)
 
     Returns:
-        str. URL
+        str
 
     >>> geturl('413B')
     'http://codeforces.com/problemset/problem/413/B'

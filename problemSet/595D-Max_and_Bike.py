@@ -10,7 +10,6 @@ Problem 594 B / 595 D. Max and Bike
 import math
 import random
 import sys
-
 import functools
 
 
@@ -28,7 +27,6 @@ def solve_for_t(r, v, l):
     def newton(t):
         return t - f(t) / dfdt(t)
 
-
     # p('\n----------------')
     estimate = l / v
     prev = estimate
@@ -43,7 +41,6 @@ def solve_for_t(r, v, l):
     # p('left(t) =', v * t + 2 * r * math.sin(v * t / (2 * r)))
     # p('l =', l)
     # p('f(t) =', f(t))
-
     return t
 
 
