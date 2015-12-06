@@ -1,10 +1,10 @@
 """
-Codeforces Round #331 (Div. 2)
+Codeforces Round #334 (Div. 2)
 
-Problem 596 C
+Problem 37 A. Towers
 
 @author yamaton
-@date 2015-11-15
+@date 2015-12-01
 """
 
 import itertools as it
@@ -15,20 +15,20 @@ import math
 import sys
 
 
-def solve(xs):
-    pass
+def solve(xs, n):
+    ...
 
 
-# def p(*args, **kwargs):
+# def pp(*args, **kwargs):
 #     return print(*args, file=sys.stderr, **kwargs)
 
 
 def main():
     n = int(input())
-    [a, b, c] = map(int, input().strip().split())
-    xs = [int(_c) for _c in input().strip().split()]
-    xss = [[int(_c) for _c in input().strip().split()] for _ in range(n)]
-
+    a, b, c = map(int, input().split())
+    xs = [int(c) for c in input().split()]
+    pairs = [tuple(map(int, input().split())) for _ in range(n)]
+    assert len(xs) == n
     result = solve(xs, n)
     print(result)
 
